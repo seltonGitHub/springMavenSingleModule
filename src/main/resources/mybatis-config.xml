@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--DTD约束引入-->
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!--全局配置开始-->
+<configuration>
+    <!--引入db.properties配置文件-->
+    <properties resource="db.properties"/>
+<!--    <typeAliases>-->
+<!--        <package name="com.xxx.entity"/>-->
+<!--    </typeAliases>-->
+    <!-- 运行环境设置  1.连接  2.事务-->
+    <environments default="dev">
+
+        <environment id="dev">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driverclass}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.username}"/>
+                <property name="password" value="${db.userpwd}"/>
+            </dataSource>
+        </environment>
+
+        <environment id="qa">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driverclass}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.username}"/>
+                <property name="password" value="${db.userpwd}"/>
+            </dataSource>
+        </environment>
+
+        <environment id="ops">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${db.driverclass}"/>
+                <property name="url" value="${db.url}"/>
+                <property name="username" value="${db.username}"/>
+                <property name="password" value="${db.userpwd}"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <!--         注意 以.命名的文件夹与分级命名的不同-->
+        <mapper resource="mapper/UserMapper.xml"/>
+    </mappers>
+
+</configuration>
