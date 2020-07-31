@@ -1,14 +1,16 @@
 package com.xxx.service.impl;
 
-import com.xxx.dao.UserDao;
+import com.xxx.dao.IUserDao;
 import com.xxx.model.po.User;
 import com.xxx.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -16,10 +18,12 @@ public class UserServiceImpl implements IUserService {
     private Logger logger = Logger.getLogger(UserServiceImpl.class);
 
     @Autowired
-    private UserDao userDao;
+    private IUserDao userDao;
 
     @Override
     public User addUser(User user) throws Exception {
+
+        logger.info(user);
 
         //1. 数据校检
         //1.1 先判空
@@ -39,8 +43,6 @@ public class UserServiceImpl implements IUserService {
 
         //2. 数据传输入库
         //2.1 数据填补
-        user.setId(22L);
-        user.setAge(18);
         Date date = new Date();
         user.setCreateTime(date);
         user.setUpdateTime(date);

@@ -12,9 +12,7 @@ import java.util.Date;
 public class User extends BaseEntity implements Serializable {
 
     public static final long serialVersionUID = 1L;
-    private Long id;
     private String name;
     private String password;
     private Integer age;
-    private Date createTime;
 }

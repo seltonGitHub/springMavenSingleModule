@@ -5,6 +5,19 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!-- 这个全局参数的作用是：指明Spring-ioc的配置文件的位置-->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-config.xml</param-value>
+    </context-param>
+
+    <!--Spring的一个核心监听器，对Spring容器进行初始化动作
+  即我们以前的ApplicationContext context=new ClassPathXml.....
+ -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <!--    mvc的所有配置 将在这里被指明位置 tomcat启动的时候会帮助我们加载spring项目-->
 
     <!--    将来所有的tomcat请求 都会被这个servlet拦截 -->
