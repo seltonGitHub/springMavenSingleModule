@@ -2,11 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--  为了让SpringIoC可以基于注解来做，注解支持-->
     <context:annotation-config/>
@@ -16,8 +20,50 @@
     -->
     <context:component-scan base-package="com.xxx"/>
 
+<!--    开启自动代理注解扫描 配置-->
+<!--    <aop:aspectj-autoproxy/>-->
+
+<!--
+    <aop:config>
+&lt;!&ndash;        切点 记录了需要被增强的原始功能对象的位置&ndash;&gt;
+&lt;!&ndash;        expression里面配置的就是切面表达式 &ndash;&gt;
+&lt;!&ndash;        id 就是我们给这个切点起得名字&ndash;&gt;
+
+&lt;!&ndash;        bean() 将来这个bean中的所有方法都会被增强&ndash;&gt;
+
+        <aop:pointcut id="mypointcut1" expression="bean(userServiceImpl)"/>
+
+&lt;!&ndash;&lt;!&ndash;   advice-ref 增强的功能         pointcut-ref 原始功能的位置&ndash;&gt;&ndash;&gt;
+&lt;!&ndash;        <aop:advisor advice-ref="myBefore" pointcut-ref="mypointcut1"/>&ndash;&gt;
+
+&lt;!&ndash;        <aop:advisor advice-ref="myAfterReturing" pointcut-ref="mypointcut1"/>&ndash;&gt;
+
+        <aop:aspect ref="yourBefore">
+            <aop:before method="before" pointcut-ref="mypointcut1"/>
+        </aop:aspect>
+
+        <aop:aspect ref="yourAfterReturing">
+            <aop:after-returning method="doAfterReturing" pointcut-ref="mypointcut1" returning="returnResult"/>
+        </aop:aspect>
+
+        <aop:aspect ref="yourAfter">
+            <aop:after method="doAfter" pointcut-ref="mypointcut1"/>
+        </aop:aspect>
+
+        <aop:aspect ref="yourAround">
+            <aop:around method="preAround" pointcut-ref="mypointcut1"/>
+        </aop:aspect>
+
+        <aop:aspect ref="yourAfterThrowing">
+            <aop:after-throwing method="afterThrowing" throwing="myThrowable" pointcut-ref="mypointcut1"/>
+        </aop:aspect>
+
+    </aop:config>-->
+
     <!--  引入外部的一个配置文件，这个文件里放的全都是C3P0数据源连接池的配置-->
     <context:property-placeholder location="classpath:c3p0-config.properties"/>
 
     <import resource="classpath:spring-mybatis-config.xml"/>
+
+    <import resource="classpath:spring-redis-config.xml"/>
 </beans>

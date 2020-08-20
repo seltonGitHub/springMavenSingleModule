@@ -2,11 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:task="http://www.springframework.org/schema/task"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
-        http://www.springframework.org/schema/context/spring-context-4.3.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+         http://www.springframework.org/schema/tx
+         http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+         http://www.springframework.org/schema/aop
+         http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+         http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
 
     <!--构建一个C3P0数据源连接池对象-->
@@ -37,5 +44,25 @@
         <property name="sqlSessionFactoryBeanName"  value="sqlSessionFactory"></property>
     </bean>
 
+<!--    配置 事务管理器-->
+    <bean id="id_mangager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="id_ds_c3p0"/>
+    </bean>
+
+<!--    将上一步的事务管理器 在这块注册
+&lt;!&ndash;    这个 就是一个功能增强&ndash;&gt;
+    <tx:advice id="id_txadv" transaction-manager="id_mangager">
+        <tx:attributes>
+&lt;!&ndash;            需要被事务管理 或者说将来会被增强的原始方法的名称&ndash;&gt;
+            <tx:method name="aLoanEvent" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+&lt;!&ndash;        切面 这块需要写 功能增强 以及切点(原始功能的位置)&ndash;&gt;
+        <aop:advisor advice-ref="id_txadv" pointcut="execution(* com.xxx.service.impl.*.*(..))"/>
+    </aop:config>-->
+
+    <tx:annotation-driven transaction-manager="id_mangager"/>
 
 </beans>

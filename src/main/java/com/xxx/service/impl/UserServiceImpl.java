@@ -8,9 +8,12 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -51,7 +54,50 @@ public class UserServiceImpl implements IUserService {
         logger.info("UserServiceImpl addUser " + user);
         userDao.addUser(user);
 
+//        //这儿有一行代码 开启事务
+//
+//        //执行一个sql语句  给张三转账
+//        userDao.addUser(user);
+//
+//        int i = 1 / 0;
+//        //另一个sql语句   张三还钱
+//        userDao.addUser(user);
+
+        //这儿有一行代码 提交事务
+
         //3. 返回结果给controller
         return user;
+    }
+
+    @Override
+    public void removeUser() {
+//        int i = 1 / 0;
+        System.out.println("UserServiceImpl.removeUser");
+    }
+
+    @Override
+    public void removeUser(String name, String age) {
+        System.out.println("UserServiceImpl.removeUser");
+        System.out.println("name = " + name + ", age = " + age);
+    }
+
+    @Override
+    public void updateUserMoney(int money) {
+
+    }
+
+
+    //我们需要给这个方法添加事务
+    @Override
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void aLoanEvent() throws FileNotFoundException {
+        // 金鹏 借 20元 给 子琛
+
+        userDao.updateMoney(0, "金鹏");
+
+        //当触发了非运行时异常的时候 并不会触发事务的功能增强
+//        FileOutputStream fileOutputStream = new FileOutputStream("/g/pppp/sdagsdg");
+
+        userDao.updateMoney(150, "周子琛");
     }
 }
