@@ -17,6 +17,24 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <!-- 防止Spring内存溢出监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+
+    <!-- 字符集 过滤器 -->
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <!--    mvc的所有配置 将在这里被指明位置 tomcat启动的时候会帮助我们加载spring项目-->
 
@@ -39,5 +57,14 @@
         <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+
+    <!-- Session超时时间 -->
+    <!--    比较通用的设置session失效时间的方法 tomcat默认设置是30分钟
+    // 设置为0，-1 表示永不超时-->
+    <!-- 设置session失效，单位分 -->
+    <session-config>
+        <session-timeout>15</session-timeout>
+    </session-config>
 
 </web-app>

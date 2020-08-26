@@ -1,0 +1,34 @@
+"在服务器运行过程中，Spring不停的运行的计划任务和OpenSessionInViewFilter,
+使得Tomcat反复加载对象而产生框架并用时可能产生的内存泄漏，则使用IntrospectorCleanupListener作为相应的解决办法。"
+对于这一句话,引用关于IntrospectorCleanupListener一段解释:
+
+引用
+spring中的提供了一个名为org.springframework.web.util.IntrospectorCleanupListener的监听器。
+它主要负责处理由　JavaBeans Introspector的使用而引起的缓冲泄露。
+spring中对它的描述如下：它是一个在web应用关闭的时候,清除JavaBeans Introspector的监听器.
+web.xml中注册这个listener.可以保证在web 应用关闭的时候释放与掉这个web 应用相关的class loader 
+和由它管理的类如果你使用了JavaBeans Introspector来分析应用中的类,
+Introspector 缓冲中会保留这些类的引用.
+结果在你的应用关闭的时候,这些类以及web 应用相关的class loader没有被垃圾回收.
+不幸的是,清除Introspector的唯一方式是刷新整个缓冲.
+这是因为我们没法判断哪些是属于你的应用的引用.
+所以删除被缓冲的introspection会导致把这台电脑上的所有应用的introspection都删掉.
+需要注意的是,spring 托管的bean不需要使用这个监听器.
+因为spring它自己的introspection所使用的缓冲在分析完一个类之后会被马上从javaBeans Introspector缓冲中清除掉
+.应用程序中的类从来不直接使用JavaBeans Introspector.
+所以他们一般不会导致内部查看资源泄露.但是一些类库和框架往往会产生这个问题.
+例如:Struts 和Quartz.单个的内部查看泄漏会导致整个的web应用的类加载器不能进行垃圾回收.
+在web应用关闭之后,你会看到此应用的所有静态类资源(例如单例).这个错误当然不是由这个类自 身引起的.
+用法很简单，就是在web.xml中加入:
+
+<listener>
+<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+</listener>
+
+只知道servlet标准不允许在web容器内自行做线程管理，quartz的问题确实存在。
+
+对于Web容器来说，最忌讳应用程序私自启动线程，自行进行线程调度，
+像Quartz这种在web容器内部默认就自己启动了10线程进行异步job调度的框架本身就是很危险的事情，
+很容易造成servlet线程资源回收不掉，所以我一向排斥使用quartz。
+
+quartz还有一个问题就是不支持cluster。导致使用quartz的应用都没有办法做群集。
